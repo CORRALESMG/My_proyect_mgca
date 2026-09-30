@@ -30,6 +30,33 @@ model User {
   role      Role     @default(USER)
   tenantId  String
   tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  profile   Profile?
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  userId String  @unique
+  user   User    @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id         Int            @id @default(autoincrement())
+  categories PostCategory[]
+}
+
+model Category {
+  id    Int            @id @default(autoincrement())
+  posts PostCategory[]
+}
+
+model PostCategory {
+  postId     Int
+  categoryId Int
+  post       Post     @relation(fields: [postId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([postId, categoryId])
 }
 
 enum Role {
